@@ -9,7 +9,10 @@ interface Item {
 
 const findAll = async () => {
     try {
-        const { rows } = await pool.query("SELECT * FROM items");
+        const query = "SELECT * FROM items";
+
+        const { rows } = await pool.query(query);
+
         return rows;
     } catch (error) {
         console.error(chalk.red(error));
@@ -19,9 +22,10 @@ const findAll = async () => {
 
 const findById = async (id: number) => {
     try {
-        const result = await pool.query("SELECT * FROM items WHERE id = $1", [
-            id
-        ]);
+        const query = "SELECT * FROM items WHERE id = $1";
+
+        const result = await pool.query(query, [id]);
+
         return result.rows[0];
     } catch (error) {
         console.error(chalk.red(error));
@@ -31,11 +35,12 @@ const findById = async (id: number) => {
 
 const create = async (item: Item) => {
     try {
-        const result = await pool.query(
-            "INSERT INTO items (name, description) VALUES ($1, $2) RETURNING *",
-            [item.name, item.description]
-        );
-        return result.rows[0];
+        const query =
+            "INSERT INTO items (name, description) VALUES ($1, $2) RETURNING *";
+
+        const { rows } = await pool.query(query, [item.name, item.description]);
+
+        return rows[0];
     } catch (error) {
         console.error(chalk.red(error));
         throw new Error("Database query failed");
@@ -44,10 +49,14 @@ const create = async (item: Item) => {
 
 const update = async (id: number, item: Item) => {
     try {
-        const result = await pool.query(
-            "UPDATE items SET name = $1, description = $2 WHERE id = $3 RETURNING *",
-            [item.name, item.description, id]
-        );
+        const query = `UPDATE items SET name = $1, description = $2 WHERE id = $3 RETURNING *`;
+
+        const result = await pool.query(query, [
+            item.name,
+            item.description,
+            id
+        ]);
+
         return result.rows[0];
     } catch (error) {
         console.error(chalk.red(error));
@@ -57,10 +66,10 @@ const update = async (id: number, item: Item) => {
 
 const remove = async (id: number) => {
     try {
-        const result = await pool.query(
-            "DELETE FROM items WHERE id = $1 RETURNING *",
-            [id]
-        );
+        const query = "DELETE FROM items WHERE id = $1 RETURNING *";
+
+        const result = await pool.query(query, [id]);
+
         return result.rows[0];
     } catch (error) {
         console.error(chalk.red(error));
