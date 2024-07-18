@@ -1,5 +1,5 @@
 {
-    "name": "bluueweb",
+    "name": "basic-server-psql",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",

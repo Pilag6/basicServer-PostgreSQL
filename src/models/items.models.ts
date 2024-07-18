@@ -9,8 +9,8 @@ interface Item {
 
 const findAll = async () => {
     try {
-        const result = await pool.query("SELECT * FROM items");
-        return result.rows;
+        const { rows } = await pool.query("SELECT * FROM items");
+        return rows;
     } catch (error) {
         console.error(chalk.red(error));
         throw new Error("Database query failed");
