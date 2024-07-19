@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import chalk from "chalk";
 import { pool } from "../config/database.js";
 import { QueryResult } from "pg";
-import { update } from "../models/items.models.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 interface Item {
@@ -67,29 +66,31 @@ const createItem = asyncHandler(
 );
 
 // PATCH /api/items/:id
-const updateItem = asyncHandler(async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const id = parseInt(req.params.id);
-        const itemUpdate: Partial<Item> = req.body;
+const updateItem = asyncHandler(
+    async (req: Request, res: Response): Promise<Response> => {
+        try {
+            const id = parseInt(req.params.id);
+            const itemUpdate: Partial<Item> = req.body;
 
-        const response: QueryResult<Item> = await pool.query(
-            `UPDATE items SET name = $1, description = $2 WHERE id = $3 RETURNING *`,
-            [itemUpdate.name, itemUpdate.description, id]
-        );
+            const response: QueryResult<Item> = await pool.query(
+                `UPDATE items SET name = $1, description = $2 WHERE id = $3 RETURNING *`,
+                [itemUpdate.name, itemUpdate.description, id]
+            );
 
-        if (response.rowCount === 0) {
-            return res.status(404).json({ message: "Item not found" });
+            if (response.rowCount === 0) {
+                return res.status(404).json({ message: "Item not found" });
+            }
+
+            return res.json({
+                message: `Item ${id} updated successfully`,
+                item: response.rows[0]
+            });
+        } catch (error) {
+            console.error(chalk.red(error));
+            return res.status(500).json({ message: "Internal server error" });
         }
-
-        return res.json({
-            message: `Item ${id} updated successfully`,
-            item: response.rows[0]
-        });
-    } catch (error) {
-        console.error(chalk.red(error));
-        return res.status(500).json({ message: "Internal server error" });
     }
-});
+);
 
 // DELETE /api/items/:id
 const deleteItem = asyncHandler(
