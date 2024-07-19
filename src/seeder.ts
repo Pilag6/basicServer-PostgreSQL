@@ -45,7 +45,7 @@ const createDatabase = async () => {
 };
 
 const createItemsTable = `
-    CREATE TABLE IF NOT EXISTS items (
+    CREATE TABLE IF NOT EXISTS items ( 
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL UNIQUE,
         description TEXT,

@@ -32,6 +32,7 @@ app.use("/api/items", itemsRoute);
 // Error handling middleware
 app.use(errorHandler);
 
+// Start 
 app.listen(PORT, () => {
     console.log(
         chalk.blue.bold.bgWhite(
