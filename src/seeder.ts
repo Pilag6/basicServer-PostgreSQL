@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import chalk from "chalk";
 
 dotenv.config();
+
 const createDatabase = async () => {
     const pool = new Pool({
         host: process.env.DB_HOST,
@@ -23,9 +24,17 @@ const createDatabase = async () => {
         if (res.rows.length === 0) {
             // Database doesn't exist, so create it
             await pool.query(`CREATE DATABASE ${process.env.DB_NAME}`);
-            console.log(`Database ${chalk.green.bold.bgWhite(process.env.DB_NAME)} created successfully`);
+            console.log(
+                `Database ${chalk.green.bold.bgWhite(
+                    process.env.DB_NAME
+                )} created successfully`
+            );
         } else {
-            console.log(`Database ${chalk.white.bold.bgRed(process.env.DB_NAME)} already exists`);
+            console.log(
+                `Database ${chalk.white.bold.bgRed(
+                    process.env.DB_NAME
+                )} already exists`
+            );
         }
     } catch (error) {
         console.error("Error creating database:", error);
@@ -37,13 +46,13 @@ const createDatabase = async () => {
 
 const createItemsTable = `
     CREATE TABLE IF NOT EXISTS items (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL UNIQUE,
-      description TEXT,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE,
+        description TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     )
-  `;
+    `;
 
 const seedDatabase = async () => {
     await createDatabase();
