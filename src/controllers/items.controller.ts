@@ -9,8 +9,8 @@ import asyncHandler from "../utils/asyncHandler.js";
 
 // Define the structure of an Item
 interface Item {
-    id?: number;        // Optional id field
-    name: string;       // Required name field
+    id?: number; // Optional id field
+    name: string; // Required name field
     description?: string; // Optional description field
 }
 
@@ -28,7 +28,7 @@ const getAllItems = asyncHandler(
             return res.status(200).json(items);
         } catch (error) {
             // Log error in red color
-            console.error(chalk.red(error));
+            console.error(chalk.red("🚫", error));
             // Return 500 Internal Server Error
             return res.status(500).json({ message: "Internal Server error" });
         }
@@ -54,7 +54,7 @@ const getItem = asyncHandler(
             return res.json(response.rows[0]);
         } catch (error) {
             // Log error in red color
-            console.error(chalk.red(error));
+            console.error(chalk.white.bgRed("🚫", error));
             // Return 500 Internal Server Error
             return res.status(500).json({ message: "Internal Server error" });
         }
@@ -73,7 +73,7 @@ const createItem = asyncHandler(
             }
             // Execute SQL query to insert new item
             const response: QueryResult<Item> = await pool.query(
-                "INSERT INTO items (name, description) VALUES ($1, $2) RETURNING *",
+                "INSERT INTO items (name, description) VALUES ($1, $2) RETURNING *", // With RETURNING *, I make sure to get the created item back
                 [name, description]
             );
             // Extract the created item from the query result
@@ -84,7 +84,7 @@ const createItem = asyncHandler(
                 .json({ message: "Item Created", body: createdItem });
         } catch (error) {
             // Log error in red color
-            console.error(chalk.red(error));
+            console.error(chalk.red("🚫", error));
             // Return 500 Internal Server Error
             return res.status(500).json({ message: "Internal Server error" });
         }
@@ -149,7 +149,7 @@ const updateItem = asyncHandler(
             });
         } catch (error) {
             // Log error in red color
-            console.error(chalk.red(error));
+            console.error(chalk.red("🚫", error));
             // Return 500 Internal Server Error
             return res.status(500).json({ message: "Internal server error" });
         }
@@ -180,7 +180,7 @@ const deleteItem = asyncHandler(
             });
         } catch (error) {
             // Log error in red color
-            console.error(chalk.red(error));
+            console.error(chalk.red("🚫", error));
             // Return 500 Internal Server Error
             return res.status(500).json({ message: "Internal server error" });
         }
